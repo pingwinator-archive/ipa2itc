@@ -24,6 +24,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		753764E619FEDD1F006F1C59 /* ipa2itc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ipa2itc-Bridging-Header.h"; sourceTree = "<group>"; };
 		75F0785A19F55C1500F3A9FC /* ipa2itc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ipa2itc; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F0785D19F55C1500F3A9FC /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		75F0786419F564C800F3A9FC /* StorePackage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorePackage.swift; sourceTree = "<group>"; };
@@ -61,6 +62,7 @@
 			children = (
 				75F0785D19F55C1500F3A9FC /* main.swift */,
 				75F0786419F564C800F3A9FC /* StorePackage.swift */,
+				753764E619FEDD1F006F1C59 /* ipa2itc-Bridging-Header.h */,
 			);
 			path = ipa2itc;
 			sourceTree = "<group>";
@@ -208,6 +210,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ipa2itc/ipa2itc-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -215,6 +218,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ipa2itc/ipa2itc-Bridging-Header.h";
 			};
 			name = Release;
 		};
