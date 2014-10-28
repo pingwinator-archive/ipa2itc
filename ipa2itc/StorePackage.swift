@@ -17,8 +17,13 @@ public class StorePackage: Printable {
     public var bundleVersion: String?
     public var bundleIdentifier: String?
     
-    public init(fileURL: NSURL) {
+    public init?(fileURL: NSURL) {
         self.fileURL = fileURL
+
+        var error: NSError?
+        if self.fileURL.checkResourceIsReachableAndReturnError(&error) == false {
+            return nil
+        }
     }
     
     public var description: String {
@@ -121,5 +126,53 @@ public class StorePackage: Printable {
         document.characterEncoding = "UTF-8"
 
         return document.XMLDataWithOptions(Int(NSXMLNodePrettyPrint))
+    }
+    
+    public func writeTemporaryPackage() -> NSURL? {
+        let packageName: String! = fileURL.lastPathComponent.stringByDeletingPathExtension.stringByAppendingPathExtension("itmsp")
+        
+        if packageName == nil {
+            return nil
+        }
+        
+        
+        let temporaryPackageURL: NSURL! = NSURL.fileURLWithPath(NSTemporaryDirectory())?.URLByAppendingPathComponent(NSProcessInfo.processInfo().globallyUniqueString).URLByAppendingPathComponent(packageName)
+
+        if temporaryPackageURL == nil {
+            return nil
+        }
+        
+        var error: NSError?
+        if NSFileManager.defaultManager().createDirectoryAtURL(temporaryPackageURL, withIntermediateDirectories: true, attributes: nil, error: &error) == false {
+            if let description = error?.localizedDescription {
+                println("Error creating directory: \(description)")
+            }
+            else {
+                println("Error creating directory.")
+            }
+            
+            return nil
+        }
+        
+        let destinationURL = temporaryPackageURL.URLByAppendingPathComponent(fileURL.lastPathComponent)
+        error = nil
+        
+        if NSFileManager.defaultManager().copyItemAtURL(fileURL, toURL: destinationURL, error: &error) == false {
+            if let description = error?.localizedDescription {
+                println("Error copying file: \(description)")
+            }
+            else {
+                println("Error copying file.")
+            }
+            
+            return nil
+        }
+        
+        let contentXMLURL = temporaryPackageURL.URLByAppendingPathComponent("metadata.xml")
+        error = nil
+        
+        description.writeToURL(contentXMLURL, atomically: true, encoding: NSUTF8StringEncoding, error: &error)
+        
+        return temporaryPackageURL
     }
 }
