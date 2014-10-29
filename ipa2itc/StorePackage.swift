@@ -12,7 +12,8 @@ let packageVersion = "software5.2"
 
 public class StorePackage: Printable {
     public let fileURL: NSURL
-    public var sku: String?
+    public var vendorID: String?
+    public var appleID: Int?
     public var shortBundleVersion: String?
     public var bundleVersion: String?
     public var bundleIdentifier: String?
@@ -78,10 +79,14 @@ public class StorePackage: Printable {
         
         let softwareAssetsElement = NSXMLNode.elementWithName("software_assets") as NSXMLElement
         packageElement.addChild(softwareAssetsElement)
-        
-        if let sku = sku {
-            let skuAttribute = NSXMLNode.attributeWithName("vendor_id", stringValue: sku) as NSXMLNode
-            softwareAssetsElement.addAttribute(skuAttribute)
+
+        if let appleID = appleID {
+            let appleIDAttribute = NSXMLNode.attributeWithName("apple_id", stringValue: "\(appleID)") as NSXMLNode
+            softwareAssetsElement.addAttribute(appleIDAttribute)
+        }
+        else if let vendorID = vendorID {
+            let vendorIDAttribute = NSXMLNode.attributeWithName("vendor_id", stringValue: vendorID) as NSXMLNode
+            softwareAssetsElement.addAttribute(vendorIDAttribute)
         }
         
         if let shortBundleVersion = shortBundleVersion {
