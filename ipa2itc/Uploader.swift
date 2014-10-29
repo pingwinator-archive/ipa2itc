@@ -11,9 +11,13 @@ import Cocoa
 public class Uploader {
     private let developerDirectoryURL: NSURL!
     private let transporterURL: NSURL!
+    private let username: String
+    private let password: String
     
-    private init?(developerDirectoryURL: NSURL?) {
+    private init?(developerDirectoryURL: NSURL?, username: String, password: String) {
         self.developerDirectoryURL = developerDirectoryURL
+        self.username = username
+        self.password = password
         
         if self.developerDirectoryURL == nil {
             return nil
@@ -42,9 +46,9 @@ public class Uploader {
         }
     }
     
-    public convenience init?(pathToDeveloperDirectory: String) {
+    public convenience init?(pathToDeveloperDirectory: String, username: String, password: String) {
         if let developerDirectoryURL = NSURL(fileURLWithPath: pathToDeveloperDirectory) {
-            self.init(developerDirectoryURL: developerDirectoryURL)
+            self.init(developerDirectoryURL: developerDirectoryURL, username: username, password: password)
             
             var error: NSError?
             if self.developerDirectoryURL.checkResourceIsReachableAndReturnError(&error) == false {
@@ -59,12 +63,12 @@ public class Uploader {
             }
         }
         else {
-            self.init(developerDirectoryURL: nil)
+            self.init(developerDirectoryURL: nil, username: username, password: password)
             return nil
         }
     }
     
-    public convenience init?() {
+    public convenience init?(username: String, password: String) {
         let xcodeSelectTask = NSTask()
         xcodeSelectTask.launchPath = "/usr/bin/xcode-select"
         xcodeSelectTask.arguments = ["-p"]
@@ -77,7 +81,7 @@ public class Uploader {
         
         if xcodeSelectTask.terminationStatus != 0 {
             println("Base xcode-select exit status: \(xcodeSelectTask.terminationStatus)")
-            self.init(developerDirectoryURL: nil)
+            self.init(developerDirectoryURL: nil, username: username, password: password)
             return nil
         }
         
@@ -86,10 +90,17 @@ public class Uploader {
         
         if outputString == nil {
             println("Error reading from xcode-select pipe.")
-            self.init(developerDirectoryURL: nil)
+            self.init(developerDirectoryURL: nil, username: username, password: password)
             return nil
         }
 
-        self.init(pathToDeveloperDirectory: outputString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()))
+        self.init(pathToDeveloperDirectory: outputString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()),
+            username: username, password: password)
+    }
+    
+    public func uploadPackageAtURL(packageURL: NSURL) {
+        let transporterTask = NSTask()
+        transporterTask.launchPath = transporterURL.path!
+        transporterTask.arguments = ["-m", "upload", "-delete", "-u", username, "-s", password, "-f", packageURL]
     }
 }
