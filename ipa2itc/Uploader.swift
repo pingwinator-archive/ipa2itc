@@ -114,20 +114,11 @@ public class Uploader {
             "method": "lookupSoftwareApplications",
             "id": generateJSONRPCID(),
             "params": [
-                "Application": "Application Loader",
-                "Version": "3.0 (620)",
-                "FrameworkVersions": [
-                    "com.apple.itunes.connect.ITunesSoftwareService": "1.1 (620)",
-                    "com.apple.itunes.connect.MZRegularExpressions": "1.1 (620)",
-                    "com.apple.itunes.connect.ITunesPackage": "1.1 (620)",
-                    "com.apple.itunes.connect.ITunesConnectFoundation": "1.1 (620)",
-                    "com.apple.itunes.connect.ApplicationLoader": "3.0 (620)",
-                    "com.apple.itunes.connect.ITunesConnectAppKit": "1.1 (620)",
-                    "com.apple.itunes.connect.MZXMLMarshalling": "1.1 (620)"
-                ],
+                "Application": "ipa2itc",
+                "Version": "\(versionString) (\(versionBuild))",
                 "Password": password,
                 "Username": username,
-                "OSIdentifier": "Mac OS X 10.10.0 (x86_64)"
+                "OSIdentifier": NSProcessInfo.processInfo().operatingSystemVersionString
             ]
         ]
         
