@@ -8,11 +8,21 @@
 
 import Cocoa
 
+let iTunesConnectServiceURL: NSURL! = NSURL(string: "https://contentdelivery.itunes.apple.com/WebObjects/MZLabelService.woa/json/MZITunesProducerService")
+
+private func generateJSONRPCID() -> String {
+    let usLocale = NSLocale(localeIdentifier: "en_US")
+    let jsonRPCIDDateFormatter = NSDateFormatter()
+    jsonRPCIDDateFormatter.dateFormat = "yyyyMMddHHmmss'-'SSS"
+    return jsonRPCIDDateFormatter.stringFromDate(NSDate())
+}
+
 public class Uploader {
     private let developerDirectoryURL: NSURL!
     private let transporterURL: NSURL!
     private let username: String
     private let password: String
+    private var sku: String?
     
     private init?(developerDirectoryURL: NSURL?, username: String, password: String) {
         self.developerDirectoryURL = developerDirectoryURL
@@ -98,9 +108,119 @@ public class Uploader {
             username: username, password: password)
     }
     
+    private func lookupSoftwareApplications() -> [String: Int]? {
+        let requestBodyDictionary = [
+            "jsonrpc": "2.0",
+            "method": "lookupSoftwareApplications",
+            "id": generateJSONRPCID(),
+            "params": [
+                "Application": "Application Loader",
+                "Version": "3.0 (620)",
+                "FrameworkVersions": [
+                    "com.apple.itunes.connect.ITunesSoftwareService": "1.1 (620)",
+                    "com.apple.itunes.connect.MZRegularExpressions": "1.1 (620)",
+                    "com.apple.itunes.connect.ITunesPackage": "1.1 (620)",
+                    "com.apple.itunes.connect.ITunesConnectFoundation": "1.1 (620)",
+                    "com.apple.itunes.connect.ApplicationLoader": "3.0 (620)",
+                    "com.apple.itunes.connect.ITunesConnectAppKit": "1.1 (620)",
+                    "com.apple.itunes.connect.MZXMLMarshalling": "1.1 (620)"
+                ],
+                "Password": password,
+                "Username": username,
+                "OSIdentifier": "Mac OS X 10.10.0 (x86_64)"
+            ]
+        ]
+        
+        var returnValue: [String: Int]?
+
+        var error: NSError?
+        let requestBodyData = NSJSONSerialization.dataWithJSONObject(requestBodyDictionary, options: NSJSONWritingOptions.allZeros, error: &error)
+        
+        if requestBodyData == nil {
+            if let description = error?.description {
+                println("Error serializing JSON data: \(description).")
+                return nil
+            }
+            else {
+                println("Error serializing JSON data.")
+                return nil
+            }
+        }
+        
+        let session = NSURLSession.sharedSession()
+        
+        let request = NSMutableURLRequest(URL: iTunesConnectServiceURL)
+        request.HTTPBody = requestBodyData
+        request.HTTPMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTaskSemaphore = dispatch_semaphore_create(0)
+        
+        let dataTask = session.dataTaskWithRequest(request) {
+            (data: NSData!, response: NSURLResponse!, error: NSError!) in
+            
+            if data == nil {
+                println("Error looking up software applications: \(error.localizedDescription).")
+                dispatch_semaphore_signal(dataTaskSemaphore)
+                return
+            }
+            
+            var jsonError: NSError?
+            if let jsonDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.allZeros, error: &jsonError) as? [String: AnyObject] {
+                if let result = jsonDictionary["result"] as? [String: AnyObject] {
+                    if let apps = result["Applications"] as? [[String: AnyObject]] {
+                        returnValue = reduce(apps, [String:Int]()) {
+                            (result, app) in
+                            
+                            let bundleID: String! = app["bundleId"] as? String
+                            let appleID: Int! = app["adamId"] as? Int
+                            var nextResult = result
+
+                            if bundleID != nil && appleID != nil {
+                                nextResult[bundleID] = appleID
+                            }
+                            
+                            return nextResult
+                        }
+                        
+                        dispatch_semaphore_signal(dataTaskSemaphore)
+                        return
+                    }
+                }
+            }
+            else {
+                if let description = error?.localizedDescription {
+                    println("Error parsing response: \(description)")
+                }
+                else {
+                    println("Error parsing response.")
+                }
+                
+                dispatch_semaphore_signal(dataTaskSemaphore)
+                return
+            }
+        }
+        
+        dataTask.resume()
+        dispatch_semaphore_wait(dataTaskSemaphore, DISPATCH_TIME_FOREVER)
+        
+        return returnValue
+    }
+    
     public func uploadPackageAtURL(packageURL: NSURL) {
         let transporterTask = NSTask()
         transporterTask.launchPath = transporterURL.path!
         transporterTask.arguments = ["-m", "upload", "-delete", "-u", username, "-s", password, "-f", packageURL]
+        
+        if sku == nil {
+            if let softwareApplications = lookupSoftwareApplications() {
+                if let appleID = softwareApplications["com.nitemotif.Hive"] {
+                    println("Hive Apple ID: \(appleID)")
+                }
+                else {
+                    println("Could not find application in iTunes Connect.")
+                }
+            }
+        }
     }
 }
