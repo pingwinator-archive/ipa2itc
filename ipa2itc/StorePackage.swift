@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Nitemotif. All rights reserved.
 //
 
-import Cocoa
+import Foundation
 
 let packageVersion = "software5.2"
 
