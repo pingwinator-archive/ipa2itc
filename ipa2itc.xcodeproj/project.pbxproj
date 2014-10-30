@@ -315,7 +315,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EA31D294630CF0F7079C9A01 /* Pods-ipa2itc.debug.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 52;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ipa2itc/ipa2itc-Bridging-Header.h";
 			};
@@ -325,7 +325,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D9FE19C8707BE6F339F747F8 /* Pods-ipa2itc.release.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 52;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ipa2itc/ipa2itc-Bridging-Header.h";
 			};

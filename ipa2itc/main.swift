@@ -82,7 +82,15 @@ var packageURL: NSURL!
 if let arguments = processArguments(NSProcessInfo.processInfo().arguments as [String]) {
     username = arguments["username"]
     password = arguments["password"]
-    packageURL = NSURL(fileURLWithPath: arguments["path"]!)
+    
+    if let path = arguments["path"]?.stringByStandardizingPath {
+        if path.hasPrefix("/") {
+            packageURL = NSURL(fileURLWithPath: path)
+        }
+        else {
+            packageURL = NSURL(fileURLWithPath: String.pathWithComponents(NSFileManager.defaultManager().currentDirectoryPath.pathComponents + path.pathComponents))
+        }
+    }
 }
 
 if password == nil && username != nil{
