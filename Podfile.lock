@@ -1,0 +1,10 @@
+PODS:
+  - objective-zip (0.8.3)
+
+DEPENDENCIES:
+  - objective-zip (~> 0.8)
+
+SPEC CHECKSUMS:
+  objective-zip: 5d3c6d7c5f9f7638c840c011e9e33485b5caa43c
+
+COCOAPODS: 0.34.1
