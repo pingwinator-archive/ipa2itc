@@ -13,7 +13,6 @@ public class Uploader {
     private let transporterURL: NSURL!
     private let username: String
     private let password: String
-    private var sku: String?
     
     private init?(developerDirectoryURL: NSURL?, username: String, password: String) {
         self.developerDirectoryURL = developerDirectoryURL
@@ -99,22 +98,44 @@ public class Uploader {
             username: username, password: password)
     }
     
-    public func uploadPackageAtURL(packageURL: NSURL) {
+    public func uploadPackageAtURL(packageURL: NSURL) -> Bool {
         let transporterTask = NSTask()
-        transporterTask.launchPath = transporterURL.path!
-        transporterTask.arguments = ["-m", "upload", "-delete", "-u", username, "-s", password, "-f", packageURL]
+        let transporterPath: String! = transporterURL.path
         
-        if sku == nil {
-            let connectService = ConnectService(username: username, password: password)
-            
-            if let softwareApplications = connectService.lookupSoftwareApplications() {
-                if let appleID = softwareApplications["com.nitemotif.Hive"] {
-                    println("Hive Apple ID: \(appleID)")
-                }
-                else {
-                    println("Could not find application in iTunes Connect.")
-                }
+        if transporterPath == nil {
+            println("Can't find path to iTMSTransporter.")
+            return false
+        }
+        
+        var error: NSError?
+        if packageURL.checkResourceIsReachableAndReturnError(&error) == false {
+            if let description = error?.localizedDescription {
+                println("Can't access package: \(description).")
             }
+            else {
+                println("Can't access package.")
+            }
+            
+            return false
+        }
+
+        let packagePath: String! = packageURL.path
+        
+        if packagePath == nil {
+            println("Can't find path to package.")
+            return false
+        }
+        
+        transporterTask.launchPath = transporterPath
+        transporterTask.arguments = ["-m", "upload", "-delete", "-u", username, "-p", password, "-f", packagePath]
+        transporterTask.launch()
+        transporterTask.waitUntilExit()
+        
+        if transporterTask.terminationStatus == 0 {
+            return true
+        }
+        else {
+            return false
         }
     }
 }
