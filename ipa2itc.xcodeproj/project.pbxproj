@@ -112,7 +112,8 @@
 				75F0785719F55C1500F3A9FC /* Frameworks */,
 				75F0785819F55C1500F3A9FC /* CopyFiles */,
 				7858C601668EC14301E964A3 /* Copy Pods Resources */,
-				752BE2B91A0294790088B357 /* ShellScript */,
+				752BE2BA1A02A1E40088B357 /* Set Version */,
+				752BE2B91A0294790088B357 /* Build Package */,
 			);
 			buildRules = (
 			);
@@ -170,18 +171,33 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		752BE2B91A0294790088B357 /* ShellScript */ = {
+		752BE2B91A0294790088B357 /* Build Package */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Build Package";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "pkgbuild --root \"${INSTALL_ROOT}\" --identifier com.nitemotif.pkg.ipa2itc --version \"$CURRENT_PROJECT_VERSION\" --install-location / \"${BUILT_PRODUCTS_DIR}/${TARGET_NAME}.pkg\"";
+		};
+		752BE2BA1A02A1E40088B357 /* Set Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set Version";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "git=`sh /etc/profile; which git`\nappBuild=`\"$git\" rev-list --all |wc -l`\nagvtool new-version $appBuild\n";
 		};
 		7858C601668EC14301E964A3 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -295,7 +311,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EA31D294630CF0F7079C9A01 /* Pods-ipa2itc.debug.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 48;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ipa2itc/ipa2itc-Bridging-Header.h";
 			};
@@ -305,7 +321,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D9FE19C8707BE6F339F747F8 /* Pods-ipa2itc.release.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 48;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ipa2itc/ipa2itc-Bridging-Header.h";
 			};
