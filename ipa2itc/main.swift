@@ -75,17 +75,25 @@ func processArguments(arguments: [String]) -> [String: String]? {
     return parsedArguments
 }
 
-let arguments: [String: String]! = processArguments(NSProcessInfo.processInfo().arguments as [String])
+var username: String!
+var password: String!
+var packageURL: NSURL!
 
-if arguments == nil || arguments["username"] == nil || arguments["password"] == nil || arguments["path"] == nil {
-    println("Usage:")
-    println("ipa2itc -u username -p password file")
-    exit(0)
+if let arguments = processArguments(NSProcessInfo.processInfo().arguments as [String]) {
+    username = arguments["username"]
+    password = arguments["password"]
+    packageURL = NSURL(fileURLWithPath: arguments["path"]!)
 }
 
-let username = arguments["username"]!
-let password = arguments["password"]!
-let packageURL: NSURL! = NSURL(fileURLWithPath: arguments["path"]!)!
+if password == nil && username != nil{
+    password = Keychain.sharedInstance.passwordForUsername(username)
+}
+
+if username == nil || password == nil || packageURL == nil {
+    println("Usage:")
+    println("ipa2itc -u username [-p password] file")
+    exit(0)
+}
 
 if let package = StorePackage(fileURL: packageURL) {
     let connectService = ConnectService(username: username, password: password)
