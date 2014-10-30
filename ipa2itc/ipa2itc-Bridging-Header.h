@@ -7,3 +7,6 @@
 //
 
 #import <CommonCrypto/CommonDigest.h>
+#import "Zipfile.h"
+#import "FileInZipInfo.h"
+#import "ZipReadStream.h"
