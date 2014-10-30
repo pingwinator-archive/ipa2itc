@@ -18,6 +18,10 @@ public class StorePackage: Printable {
     public var bundleVersion: String?
     public var bundleIdentifier: String?
     
+    public var hasIdentifier: Bool {
+        return vendorID != nil || appleID != nil
+    }
+    
     public init?(fileURL: NSURL) {
         self.fileURL = fileURL
 
@@ -108,7 +112,7 @@ public class StorePackage: Printable {
         softwareAssetsElement.addChild(assetElement)
         
         let bundleTypeAttribute = NSXMLElement.attributeWithName("type", stringValue: "bundle") as NSXMLNode
-        softwareAssetsElement.addAttribute(bundleTypeAttribute)
+        assetElement.addAttribute(bundleTypeAttribute)
         
         let dataFileElement = NSXMLElement.elementWithName("data_file") as NSXMLElement
         assetElement.addChild(dataFileElement)
@@ -139,7 +143,6 @@ public class StorePackage: Printable {
         if packageName == nil {
             return nil
         }
-        
         
         let temporaryPackageURL: NSURL! = NSURL.fileURLWithPath(NSTemporaryDirectory())?.URLByAppendingPathComponent(NSProcessInfo.processInfo().globallyUniqueString).URLByAppendingPathComponent(packageName)
 
