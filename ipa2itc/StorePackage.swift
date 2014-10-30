@@ -123,6 +123,26 @@ public class StorePackage: Printable {
         let fileNameTextNode = NSXMLNode.textWithStringValue(fileURL.lastPathComponent) as NSXMLNode
         fileNameElement.addChild(fileNameTextNode)
         
+        var error: NSError?
+        let fileAttributes = NSFileManager.defaultManager().attributesOfItemAtPath(fileURL.path!, error: &error)
+        
+        if fileAttributes == nil {
+            if let description = error?.localizedDescription {
+                println("Error checking file size: \(description).")
+            }
+            else {
+                println("Error checking file size.")
+            }
+        } else {
+            if let size = fileAttributes![NSFileSize] as? NSNumber {
+                let sizeElement = NSXMLElement.elementWithName("size") as NSXMLElement
+                dataFileElement.addChild(sizeElement)
+                
+                let sizeTextNode = NSXMLNode.textWithStringValue("\(size)") as NSXMLNode
+                sizeElement.addChild(sizeTextNode)
+            }
+        }
+        
         if let checksum = checksum {
             let checksumElement = NSXMLElement.elementWithName("checksum") as NSXMLElement
             dataFileElement.addChild(checksumElement)
