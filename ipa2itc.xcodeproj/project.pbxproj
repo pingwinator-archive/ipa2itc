@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7503D71B1A02A7370052DE43 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503D71A1A02A7360052DE43 /* Keychain.swift */; };
 		752BE2B51A0162110088B357 /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752BE2B41A0162110088B357 /* ConnectService.swift */; };
 		752BE2B71A017E9B0088B357 /* ApplicationPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752BE2B61A017E9B0088B357 /* ApplicationPackage.swift */; };
 		753764E819FEECA2006F1C59 /* Uploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753764E719FEECA2006F1C59 /* Uploader.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7503D71A1A02A7360052DE43 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		752BE2B41A0162110088B357 /* ConnectService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectService.swift; sourceTree = "<group>"; };
 		752BE2B61A017E9B0088B357 /* ApplicationPackage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationPackage.swift; sourceTree = "<group>"; };
 		753764E619FEDD1F006F1C59 /* ipa2itc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ipa2itc-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				752BE2B61A017E9B0088B357 /* ApplicationPackage.swift */,
 				753764E719FEECA2006F1C59 /* Uploader.swift */,
 				752BE2B41A0162110088B357 /* ConnectService.swift */,
+				7503D71A1A02A7360052DE43 /* Keychain.swift */,
 				753764E619FEDD1F006F1C59 /* ipa2itc-Bridging-Header.h */,
 			);
 			path = ipa2itc;
@@ -226,6 +229,7 @@
 				752BE2B51A0162110088B357 /* ConnectService.swift in Sources */,
 				75F0785E19F55C1500F3A9FC /* main.swift in Sources */,
 				752BE2B71A017E9B0088B357 /* ApplicationPackage.swift in Sources */,
+				7503D71B1A02A7370052DE43 /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
