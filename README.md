@@ -20,8 +20,8 @@ If your iTunes Connect password is not in the keychain, or not in the right keyc
 2. With the login keychain highlighted, click File->New Password Item from the menu.
 3. Use the following settings for your password item:
 
-**Keychain Item Name**: https://itunesconnect.apple.com
-**Account Name**: your iTunes Connect username
+**Keychain Item Name**: https://itunesconnect.apple.com<br />
+**Account Name**: your iTunes Connect username<br />
 **Password**: your iTunes Connect password
 
 ### Living Dangerously
